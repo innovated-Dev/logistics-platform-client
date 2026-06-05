@@ -1,7 +1,7 @@
 // ==================== SIGN IN VIEW — Fixed ====================
 // Changes:
 // 1. Email field (was already correct UI — backend controllers now also use email)
-// 2. Role-specific login calls: AuthAPI.loginCustomer, loginMerchant, loginRider
+// 2. Role-specific login calls: AuthAPI.loginCustomer, loginMerchant, loginPickman
 // 3. Admin/support roles hidden from public role selector (separate login)
 
 import { AuthAPI } from '../js/api.js';
@@ -19,7 +19,7 @@ export const SignInView = {
           <p>Book in minutes, track in real time. Built for Ibadan and beyond.</p>
           <ul class="auth-feature-list">
             <li><div class="dot"></div> Real-time GPS tracking on every order</li>
-            <li><div class="dot"></div> Verified, background-checked riders</li>
+            <li><div class="dot"></div> Verified, background-checked Pickmen</li>
             <li><div class="dot"></div> Secure Paystack payments or wallet</li>
             <li><div class="dot"></div> Airtime &amp; data → instant wallet cash</li>
           </ul>
@@ -38,7 +38,7 @@ export const SignInView = {
               ${[
                 ['customer', '<i class="fa-regular fa-user"></i>',       'Customer', 'Track orders'],
                 ['merchant', '<i class="fa-solid fa-store"></i>',      'Merchant', 'Ship goods'],
-                ['rider',    '<i class="fa-solid fa-motorcycle"></i>', 'Rider',    'Accept jobs'],
+                ['pickman',    '<i class="fa-solid fa-motorcycle"></i>', 'Pickman',    'Accept jobs'],
               ].map(([r, icon, name, desc], i) => `
               <div class="role-card${i === 0 ? ' active' : ''}" onclick="siSelectRole(this,'${r}')">
                 <div class="role-card-icon">${icon}</div>
