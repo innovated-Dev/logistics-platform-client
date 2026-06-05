@@ -3,13 +3,15 @@
 // No more zone dropdowns — customers just type their address.
 let cMaps = {}, cRiderMarker = null, cTrackInterval = null;
 
+
 export const CustomerDashView = {
   render(container) {
     const u = OS.currentUser || { name: 'Customer', initials: 'C', color: '#3b82f6' };
     const firstName = u.name?.split(' ')[0] || u.firstName || 'there';
     const hour = new Date().getHours();
     const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-
+    const showToast = (msg, type) => window.toast?.(msg, type);
+    
     container.innerHTML = `
     <div class="dash-wrapper">
       <div class="dash-topbar">
@@ -33,7 +35,7 @@ export const CustomerDashView = {
 
         <!-- ═══ OVERVIEW ═══ -->
         <div id="cp-overview" class="dash-panel active">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">${greeting}, ${firstName} 👋</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">${greeting}, ${firstName} 👋</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Here's your delivery activity.</div>
 
           <div class="stats-grid">
@@ -87,7 +89,7 @@ export const CustomerDashView = {
 
         <!-- ═══ PLACE ORDER ═══ -->
         <div id="cp-order" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Place a New Order</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Place a New Order</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Fill in the details and get matched with a verified nearby rider.</div>
 
           <div class="order-progress">
@@ -134,6 +136,9 @@ export const CustomerDashView = {
                 <input type="hidden" id="pkuZone">
 
                 <div class="form-group">
+                  <label>Sender Name</label>
+                  <input class="form-input" id="pkuName" value="${firstName}" readonly>
+
                   <label>Sender Phone</label>
                   <input class="form-input" id="pkuPhone" placeholder="+234 800 000 0000">
                 </div>
@@ -169,6 +174,9 @@ export const CustomerDashView = {
                 <input type="hidden" id="dlvZone">
 
                 <div class="form-group">
+                <label>Recipient Name</label>
+                <input class="form-input" id="dlvName" placeholder="e.g. Adekunle Okonkwo" required>
+
                   <label>Recipient Phone</label>
                   <input class="form-input" id="dlvPhone" placeholder="+234 800 000 0000">
                 </div>
@@ -268,7 +276,7 @@ export const CustomerDashView = {
           <!-- Step 3: Searching for rider -->
           <div id="ostep3" style="display:none;text-align:center;padding:48px 20px">
             <div style="font-size:60px;margin-bottom:16px">🔍</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:22px;margin-bottom:10px">Finding your rider…</h2>
+            <h2 style="font-family:'Switzer',sans-serif;font-size:22px;margin-bottom:10px">Finding your rider…</h2>
             <p style="color:var(--text2);margin-bottom:20px">We're matching you with the 3 nearest verified riders.<br>This takes up to 90 seconds.</p>
             <div class="loader" style="margin:0 auto 20px"></div>
             <div class="mono" id="newOrderCode" style="font-size:14px;color:var(--red);margin-bottom:20px"></div>
@@ -278,7 +286,7 @@ export const CustomerDashView = {
           <!-- Step 4: Rider found -->
           <div id="ostep4" style="display:none;text-align:center;padding:48px 20px">
             <div style="font-size:60px;margin-bottom:16px">🚀</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:22px;margin-bottom:10px">Rider Assigned!</h2>
+            <h2 style="font-family:'Switzer',sans-serif;font-size:22px;margin-bottom:10px">Rider Assigned!</h2>
             <p style="color:var(--text2);margin-bottom:10px">Your rider is heading to the pickup point.</p>
             <div class="mono" id="confirmedOrderCode" style="font-size:14px;color:var(--red);margin-bottom:20px"></div>
             <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
@@ -290,7 +298,7 @@ export const CustomerDashView = {
 
         <!-- ═══ TRACK ORDER ═══ -->
         <div id="cp-track" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Live Order Tracking</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Live Order Tracking</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Real-time GPS — updates every 5 seconds</div>
 
           <div id="track-empty" style="text-align:center;padding:60px 20px">
@@ -359,7 +367,7 @@ export const CustomerDashView = {
 
         <!-- ═══ MY ORDERS ═══ -->
         <div id="cp-orders" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">My Orders</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">My Orders</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Your complete delivery history</div>
 
           <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
@@ -387,7 +395,7 @@ export const CustomerDashView = {
 
         <!-- ═══ WALLET ═══ -->
         <div id="cp-wallet" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">My Wallet</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">My Wallet</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Manage your OffScape balance</div>
 
           <div class="g2">
@@ -433,7 +441,7 @@ export const CustomerDashView = {
 
         <!-- ═══ AIRTIME TO CASH ═══ -->
         <div id="cp-airtime" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Airtime & Data → Cash</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Airtime & Data → Cash</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Convert airtime to real money in your OffScape wallet</div>
 
           <div class="g2">
@@ -769,21 +777,23 @@ export const CustomerDashView = {
       _orderFormData = {
         pickup: {
           address:  pkuAddr,
+          senderName:  pkuName.value,      
+          senderPhone: pkuPhone.value, 
           city:     document.getElementById('pkuCity')?.value,
           zone:     _pkuZoneData.zoneId,
           zoneName: _pkuZoneData.zoneName,
           lat:      _pkuZoneData.lat,
           lng:      _pkuZoneData.lng,
-          phone:    document.getElementById('pkuPhone')?.value,
         },
         dropoff: {
           address:  dlvAddr,
+          recipientName: document.getElementById('dlvName')?.value,  
           city:     document.getElementById('dlvCity')?.value,
           zone:     _dlvZoneData.zoneId,
           zoneName: _dlvZoneData.zoneName,
           lat:      _dlvZoneData.lat,
           lng:      _dlvZoneData.lng,
-          phone:    document.getElementById('dlvPhone')?.value,
+          recipientPhone: document.getElementById('dlvPhone')?.value,
         },
         packageType:  catValue,
         packageLabel: catLabel,
@@ -823,17 +833,26 @@ export const CustomerDashView = {
     };
 
     // ─────────────────────────────────────────────
-    // doPlaceOrder — FIXED
-    // FIX 1: No semicolon after if(payMethod === 'paystack')
-    // FIX 2: payload built before PaystackPop.setup() so onSuccess can reference it
-    // FIX 3: handler.openIframe() called
-    // FIX 4: Function closes properly — helper functions are NOT nested inside it
+    // doPlaceOrder — WITH TIMEOUT & ERROR HANDLING
+    // FIX 1: Session validation before payment
+    // FIX 2: Payment timeout after 30 seconds
+    // FIX 3: Error logging for debugging
+    // FIX 4: Error handler for Paystack failures
     // ─────────────────────────────────────────────
     window.doPlaceOrder = async function() {
       const payMethod = document.querySelector('input[name="pm"]:checked')?.value || 'paystack';
       const btn = document.getElementById('payNowBtn');
       btn.disabled = true;
       btn.textContent = 'Processing…';
+
+      // ── FIX: Check session is still valid before payment
+      const { Auth, SESSION_CONFIG } = await import('../js/auth.js');
+      if (!Auth.isLoggedIn()) {
+        showToast('Session expired. Please log in again.', 'error');
+        console.warn('[Payment Blocked] Session expired');
+        Router.go('/signin');
+        return;
+      }
 
       // Build payload first — must exist before any callback references it
       const speedLabel = document.getElementById('pkgSpeed')?.value || 'express';
@@ -842,15 +861,17 @@ export const CustomerDashView = {
       const payload = {
         pickup: {
           address:      _orderFormData.pickup.address,
+          senderName:   _orderFormData.pickup.senderName,      
+          senderPhone:  _orderFormData.pickup.senderPhone, 
           city:         _orderFormData.pickup.city,
-          contactPhone: _orderFormData.pickup.phone,
           zone:         _orderFormData.pickup.zone,
           coordinates:  { lat: _orderFormData.pickup.lat, lng: _orderFormData.pickup.lng },
         },
         delivery: {
           address:      _orderFormData.dropoff.address,
+          recipientName:  _orderFormData.dropoff.recipientName,    
+          recipientPhone: _orderFormData.dropoff.recipientPhone, 
           city:         _orderFormData.dropoff.city,
-          contactPhone: _orderFormData.dropoff.phone,
           zone:         _orderFormData.dropoff.zone,
           coordinates:  { lat: _orderFormData.dropoff.lat, lng: _orderFormData.dropoff.lng },
         },
@@ -867,16 +888,43 @@ export const CustomerDashView = {
       };
 
       // ── PAYSTACK INLINE FLOW ────────────────────────────────────────────────
-      // FIX: No semicolon here — was `if(payMethod === 'paystack');{` before
       if (payMethod === 'paystack') {
-         // Add this guard
-      if (typeof PaystackPop === 'undefined') {
-        showToast('Payment system not loaded. Please refresh the page.', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Pay & Place Order →';
-        return;
-      }
+        if (typeof PaystackPop === 'undefined') {
+          showToast('Payment system not loaded. Please refresh the page.', 'error');
+          console.error('[Payment Error] PaystackPop not loaded');
+          btn.disabled = false;
+          btn.textContent = 'Pay & Place Order →';
+          return;
+        }
+
         try {
+          // ── FIX: Add payment timeout promise
+          let paymentTimeout;
+          let paymentCompleted = false;
+          const PAYMENT_TIMEOUT_MS = SESSION_CONFIG.paymentTimeout || 30000;
+
+          // Helper: Set timeout that shows error if payment takes too long
+          const startPaymentTimeout = () => {
+            paymentTimeout = setTimeout(() => {
+              if (!paymentCompleted) {
+                console.error('[Payment Timeout] Modal exceeded 30 seconds');
+                showToast('Payment is taking too long. Please check your connection and try again. If charged, your order will be created automatically.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Pay & Place Order →';
+                // Try to close modal if possible
+                if (document.querySelector('.paystack-iframe')) {
+                  document.querySelector('.paystack-iframe')?.parentElement?.remove?.();
+                }
+              }
+            }, PAYMENT_TIMEOUT_MS);
+          };
+
+          // Helper: Clear timeout when payment completes (any outcome)
+          const clearPaymentTimeout = () => {
+            paymentCompleted = true;
+            if (paymentTimeout) clearTimeout(paymentTimeout);
+          };
+
           const handler = PaystackPop.setup({
             key:      'pk_test_67a9e5178c90d95e96c91ea77cf33332c1065838',
             email:    OS.currentUser?.email,
@@ -886,7 +934,18 @@ export const CustomerDashView = {
             metadata: { orderData: JSON.stringify(_orderFormData) },
 
             onSuccess: async (transaction) => {
+              clearPaymentTimeout();
               btn.textContent = 'Creating order…';
+              console.log('[Payment Success] Reference:', transaction.reference);
+              
+              
+              //Verify token is still valid
+              const { Auth } = await import('../js/auth.js');
+              if (!Auth.isLoggedIn()) {
+                console.warn('[Order] Token expired, attempting refresh...');
+                await Auth.refresh();  // Try to get new token
+              }
+
               try {
                 const { Orders } = await import('../js/api.js');
                 const order = await Orders.create({
@@ -895,27 +954,43 @@ export const CustomerDashView = {
                 });
                 _currentOrder = order;
                 document.getElementById('ostep2').style.display = 'none';
-                document.getElementById('ostep3').style.display = 'block'; // FIX: was "dsiplay" typo
+                document.getElementById('ostep3').style.display = 'block';
                 setT('newOrderCode', order.orderCode || order._id);
                 updOP(3);
                 pollOrderStatus(order._id);
+                showToast('✓ Payment successful! Order placed.', 'success');
               } catch (e) {
-                showToast('Payment received but order failed — contact support', 'error');
+                console.error('[Order Creation Error]', e);
+                showToast('Payment received but order creation failed. Contact support with reference: ' + transaction.reference, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Pay & Place Order →';
               }
             },
 
             onCancel: () => {
+              clearPaymentTimeout();
+              console.log('[Payment Cancelled] User closed modal');
               showToast('Payment cancelled', 'warning');
+              btn.disabled = false;
+              btn.textContent = 'Pay & Place Order →';
+            },
+
+            // ── FIX: Add onError handler
+            onError: (error) => {
+              clearPaymentTimeout();
+              console.error('[Payment Error]', error);
+              showToast('Payment error: ' + (error.message || 'Unknown error'), 'error');
               btn.disabled = false;
               btn.textContent = 'Pay & Place Order →';
             },
           });
 
-          handler.openIframe(); // FIX: was missing — modal never opened before
+          // Start timeout before opening modal
+          startPaymentTimeout();
+          handler.openIframe();
 
         } catch (e) {
+          console.error('[Paystack Setup Error]', e);
           showToast(e.message || 'Could not start payment', 'error');
           btn.disabled = false;
           btn.textContent = 'Pay & Place Order →';
@@ -937,7 +1012,9 @@ export const CustomerDashView = {
 
         pollOrderStatus(order._id);
         startCancelTimer(new Date(order.createdAt));
+        showToast('✓ Order placed successfully!', 'success');
       } catch (e) {
+        console.error('[Order Creation Error]', e);
         showToast(e.message || 'Could not place order. Try again.', 'error');
         btn.disabled = false;
         btn.textContent = 'Pay & Place Order →';

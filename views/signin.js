@@ -28,7 +28,7 @@ export const SignInView = {
         <div class="auth-right">
           <div class="auth-form-header">
             <h2>Welcome back</h2>
-            <p>Don't have an account? <a href="#" data-nav="/signup">Sign up free</a></p>
+            <p>Don't have an account? <a href="#" data-page="signup">Sign up free</a></p>
           </div>
 
           <!-- ROLE SELECTOR — only 3 public roles -->
@@ -64,7 +64,7 @@ export const SignInView = {
             <div class="form-group">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                 <label style="margin-bottom:0">Password</label>
-                <a href="#" data-nav="/forgot-password"
+                <a href="#" data-page="forgot-password"
                    style="font-size:12px;color:var(--red);font-weight:700;text-decoration:none">
                   Forgot password?
                 </a>
@@ -98,7 +98,7 @@ export const SignInView = {
             <i class="fa-brands fa-whatsapp"></i>Get help on WhatsApp
           </a>
           <div class="auth-switch-link">
-            New to OffScape? <a href="#" data-nav="/signup">Create an account</a>
+            New to OffScape? <a href="#" data-page="signup">Create an account</a>
           </div>
         </div>
       </div>`;
@@ -197,52 +197,47 @@ export const SignInView = {
       spin.style.display = 'block';
       btnTxt.textContent = 'Signing in...';
 
-      try {
-        // Route to the correct role endpoint
-        const loginFn = {
-          customer: AuthAPI.loginCustomer,
-          merchant: AuthAPI.loginMerchant,
-          rider:    AuthAPI.loginRider,
-        }[selectedRole];
+     try {
+          const loginFn = {
+            customer: AuthAPI.loginCustomer,
+            merchant: AuthAPI.loginMerchant,
+            pickman: AuthAPI.loginPickman,
+          }[selectedRole];
 
-        const result = await loginFn(email, pass);
-        const { accessToken, token, user } = result;
-        const jwt = accessToken || token;
+          const response = await loginFn(email, pass);
+          const jwt = response.accessToken || response.token;
+          
+          Auth.setSession(jwt, response.user);
+          showToast(`Welcome back, ${response.user.firstName || response.user.name}! 🎉`, 'success');
 
-        Auth.setSession(jwt, user);
-        showToast(`Welcome back, ${user.firstName || user.name}! 🎉`, 'success');
+          // only pickman
+          if (response.user.role === 'pickman' && response.user.kycStatus === 'pending_kyc') {
+            setTimeout(() => Router.go('/kyc-pending'), 400);
+          } else {
+            setTimeout(() => OS.enterDashboard(response.user.role), 400);  // ← Keep this
+          }
+          
 
-        // Rider pending KYC → go to KYC screen
-        if (user.role === 'rider' && user.status === 'pending_kyc') {
-          setTimeout(() => Router.go('/kyc-pending'), 400);
-          return;
-        }
+        } catch (err) {
+          if (err.emailUnverified) {
+            sessionStorage.setItem('pendingVerifyEmail', err.email || email);
+            showToast('Please verify your email to continue.', 'warning');
+            setTimeout(() => Router.go('/verify-pending'), 800);
+            btn.disabled = false;
+            spin.style.display = 'none';
+            btnTxt.textContent = 'Sign In →';
+            return;
+          }
 
-        setTimeout(() => OS.enterDashboard(user.role), 400);
-
-      } catch (err) {
-        if (err.emailUnverified) {
-          const userEmail = err.email || email;
-          sessionStorage.setItem('pendingVerifyEmail', userEmail);
-
-          // Don't auto-resend — signup email is still valid (24hr window)
-          // Cooldown would block it anyway if signup just happened
-          // Just navigate to verify-pending where they can resend manually
-          showToast('Please verify your email to continue.', 'warning');
-          setTimeout(() => Router.go('/verify-pending'), 800);
+          errEl.textContent = err.message || 'Incorrect email or password. Please try again.';
+          errEl.classList.add('show');
           btn.disabled = false;
           spin.style.display = 'none';
           btnTxt.textContent = 'Sign In →';
-          return;
         }
-
-        errEl.textContent = err.message || 'Incorrect email or password. Please try again.';
-        errEl.classList.add('show');
-        btn.disabled = false;
-        spin.style.display = 'none';
-        btnTxt.textContent = 'Sign In →';
-      }
     };
+
+    
 
     // ── Resend Verification ──
     window.resendVerificationEmail = async function() {

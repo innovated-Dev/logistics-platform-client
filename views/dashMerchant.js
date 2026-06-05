@@ -35,7 +35,7 @@ export const MerchantDashView = {
 
         <!-- ═══ OVERVIEW ═══ -->
         <div id="mp-overview" class="dash-panel active">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Merchant Dashboard 🏪</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Merchant Dashboard 🏪</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">${u.name} · Lagos Island · Today: ${new Date().toLocaleDateString('en-NG',{weekday:'long'})}</div>
           <div class="stats-grid">
             <div class="stat-card"><div class="sv">7</div><div class="sl">Active Shipments</div><div class="ss">4 in transit</div></div>
@@ -80,7 +80,7 @@ export const MerchantDashView = {
 
         <!-- ═══ POST SHIPMENT ═══ -->
         <div id="mp-post" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Post New Shipment</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Post New Shipment</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">List goods for delivery. Nearby verified riders will be matched automatically.</div>
           <div class="g2">
             <div>
@@ -162,7 +162,7 @@ export const MerchantDashView = {
 
         <!-- ═══ ACTIVE DELIVERIES ═══ -->
         <div id="mp-active" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Active Deliveries</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Active Deliveries</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Track all your in-progress shipments in real time</div>
           <div class="g2">
             <div>
@@ -205,7 +205,7 @@ export const MerchantDashView = {
 
         <!-- ═══ HISTORY ═══ -->
         <div id="mp-history" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Delivery History</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Delivery History</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">All your past shipments and their outcomes</div>
           <div class="dash-card">
             <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
@@ -245,7 +245,7 @@ export const MerchantDashView = {
 
         <!-- ═══ WALLET ═══ -->
         <div id="mp-wallet" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Business Wallet</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Business Wallet</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Manage your merchant funds and fee summary</div>
           <div class="g2">
             <div>
@@ -305,7 +305,7 @@ export const MerchantDashView = {
 
         <!-- ═══ ANALYTICS ═══ -->
         <div id="mp-analytics" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Business Analytics</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Business Analytics</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Performance metrics for your logistics operations</div>
           <div class="stats-grid" style="margin-bottom:20px">
             <div class="stat-card"><div class="sv">143</div><div class="sl">Deliveries</div><div class="ss">This month</div></div>

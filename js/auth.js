@@ -8,6 +8,19 @@ const REFRESH_KEY = 'os_refresh_at'; // timestamp of last refresh
 
 let _refreshTimer = null;
 
+// ──────────────────────────────────────────────────────────────
+// ── SESSION CONFIGURATION ──
+// ──────────────────────────────────────────────────────────────
+// Centralized timeouts and settings for all auth/session/payment flows
+
+export const SESSION_CONFIG = {
+  timeout: 7 * 24 * 60 * 60 * 1000,            // Session expires after 7 days
+  inactivityTimeout: 30 * 24 * 60 * 60 * 1000, // Auto-logout after 30 days inactive
+  paymentTimeout: 30000,                       // Payment modal timeout: 30 seconds
+  requireReAuthOnPayment: true,                // Require PIN before Paystack charge (future)
+  paymentRetryLimit: 3,                        // Max payment retry attempts (future)
+};
+
 export const Auth = {
 
   // ── Store token + user after login/signup ──
@@ -143,3 +156,4 @@ export const Auth = {
     } catch { return null; }
   },
 };
+

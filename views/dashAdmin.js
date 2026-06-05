@@ -26,7 +26,7 @@ export const AdminDashView = {
 
         <!-- ═══ OVERVIEW ═══ -->
         <div id="ap-overview" class="dash-panel active">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Platform Overview 📊</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Platform Overview 📊</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Live metrics across Lagos & Ibadan · Last updated just now</div>
 
           <!-- KPI Grid -->
@@ -109,7 +109,7 @@ export const AdminDashView = {
 
         <!-- ═══ ALL ORDERS ═══ -->
         <div id="ap-orders" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">All Orders</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">All Orders</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Complete order management across all users and cities</div>
 
           <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
@@ -159,7 +159,7 @@ export const AdminDashView = {
 
         <!-- ═══ USERS ═══ -->
         <div id="ap-users" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">User Management</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">User Management</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Manage all customers and merchants on the platform</div>
 
           <div class="stats-grid" style="margin-bottom:20px">
@@ -194,7 +194,7 @@ export const AdminDashView = {
 
         <!-- ═══ RIDERS ═══ -->
           <div id="ap-riders" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Rider Management</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Rider Management</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Verify, monitor and manage all riders</div>
 
           <div class="stats-grid" style="margin-bottom:20px">
@@ -241,7 +241,7 @@ export const AdminDashView = {
 
         <!-- ═══ FINANCE ═══ -->
          <div id="ap-finance" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Finance & Revenue</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Finance & Revenue</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Platform revenue, fee collection, and payout tracking</div>
 
           <div class="stats-grid" style="margin-bottom:20px">
@@ -269,7 +269,7 @@ export const AdminDashView = {
               <div class="card-head">🛡️ Compensation Pool
                 <span class="badge badge-gray" style="font-size:10px;margin-left:4px">Early cancel payouts</span>
               </div>
-              <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--red);margin-bottom:6px" id="compPoolBal">₦—</div>
+              <div style="font-family:'Switzer',sans-serif;font-size:24px;font-weight:800;color:var(--red);margin-bottom:6px" id="compPoolBal">₦—</div>
               <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Riders get ₦300 from this pool when customers cancel early.</div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
                 <input type="number" id="poolTopupAmt" placeholder="₦ amount" class="form-input"
@@ -281,7 +281,7 @@ export const AdminDashView = {
               <div class="card-head">🔒 Insurance Reserve
                 <span class="badge badge-gray" style="font-size:10px;margin-left:4px">Damage/loss claims</span>
               </div>
-              <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--blue);margin-bottom:6px" id="insuranceResBal">₦—</div>
+              <div style="font-family:'Switzer',sans-serif;font-size:24px;font-weight:800;color:var(--blue);margin-bottom:6px" id="insuranceResBal">₦—</div>
               <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Funded by 0.5% of declared item value on insured orders.</div>
               <button class="btn btn-ghost btn-sm btn-full"
                 onclick="showToast('Contact finance team to process claims','info')">Process Claim</button>
@@ -306,7 +306,7 @@ export const AdminDashView = {
 
         <!-- ═══ SETTINGS ═══ -->
        <div id="ap-settings" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Platform Settings</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Platform Settings</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Configure OffScape platform rules and fees</div>
 
           <div class="g2">

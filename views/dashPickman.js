@@ -37,7 +37,7 @@ export const RiderDashView = {
 
         <!-- ═══ DASHBOARD (OVERVIEW) ═══ -->
         <div id="rp-dashboard" class="dash-panel active">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Ready to Ride? 🛵</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Ready to Ride? 🛵</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">
             You have <strong style="color:var(--success)">5 job requests</strong> waiting near you. Status:
             <span class="badge badge-green" style="margin-left:4px"><span class="pulse-dot"></span> Online</span>
@@ -126,7 +126,7 @@ export const RiderDashView = {
                   ${[['⏱','6h 24min','Online time'],['📍','87km','Distance covered'],['⭐','4.9','Today\'s avg rating'],['💰','₦4,850','Net earned']].map(([icon,val,lbl])=>`
                   <div style="flex:1;min-width:90px;text-align:center;background:var(--bg);border-radius:8px;padding:10px;border:1.5px solid var(--border)">
                     <div style="font-size:18px;margin-bottom:3px">${icon}</div>
-                    <div style="font-size:14px;font-weight:800;font-family:'Syne',sans-serif">${val}</div>
+                    <div style="font-size:14px;font-weight:800;font-family:'Switzer',sans-serif">${val}</div>
                     <div style="font-size:10px;color:var(--text3)">${lbl}</div>
                   </div>`).join('')}
                 </div>
@@ -137,7 +137,7 @@ export const RiderDashView = {
 
         <!-- ═══ AVAILABLE JOBS ═══ -->
         <div id="rp-jobs" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Available Jobs</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Available Jobs</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">5 delivery requests near you. Accept to lock in the job.</div>
 
           <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
@@ -185,12 +185,12 @@ export const RiderDashView = {
 
         <!-- ═══ ACTIVE DELIVERY ═══ -->
         <div id="rp-active" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Active Delivery 🛵</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Active Delivery 🛵</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Navigate to pickup, then deliver to customer</div>
 
           <div id="noActiveJob" style="text-align:center;padding:60px 20px">
             <div style="font-size:48px;margin-bottom:16px">📭</div>
-            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px">No Active Delivery</div>
+            <div style="font-family:'Switzer',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px">No Active Delivery</div>
             <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Accept a job from Available Jobs to start tracking here.</div>
             <button class="btn btn-primary" onclick="rPanel('jobs',document.querySelector('[data-panel=r-jobs]'))">Browse Available Jobs →</button>
           </div>
@@ -259,7 +259,7 @@ export const RiderDashView = {
 
         <!-- ═══ EARNINGS ═══ -->
         <div id="rp-earnings" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">My Earnings 💰</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">My Earnings 💰</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Your income summary and withdrawal options</div>
 
           <!-- COD pending debit alert (shown when rider has outstanding COD fees) -->
@@ -351,7 +351,7 @@ export const RiderDashView = {
 
         <!-- ═══ PROFILE ═══ -->
         <div id="rp-profile" class="dash-panel">
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Rider Profile</div>
+          <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Rider Profile</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Manage your account and vehicle details</div>
 
           <div class="g2">

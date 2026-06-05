@@ -34,13 +34,13 @@ export const ResetPasswordView = {
           <!-- State: invalid/expired token -->
           <div id="rpInvalid" style="display:none;text-align:center;padding:40px 0">
             <div style="font-size:56px;margin-bottom:20px">⛔</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px;color:var(--red)">
+            <h2 style="font-family:'Switzer',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px;color:var(--red)">
               Link invalid or expired
             </h2>
             <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:24px">
               This password reset link has expired or already been used. Reset links are valid for 15 minutes only.
             </p>
-            <a href="#" data-nav="/forgot-password" class="auth-submit"
+            <a href="#" data-page="forgot-password" class="auth-submit"
                style="display:inline-block;text-decoration:none;width:auto;padding:12px 32px">
               Request a new link →
             </a>
@@ -85,13 +85,13 @@ export const ResetPasswordView = {
           <!-- State: success -->
           <div id="rpSuccess" style="display:none;text-align:center;padding:40px 0">
             <div style="font-size:56px;margin-bottom:20px">✅</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px">
+            <h2 style="font-family:'Switzer',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px">
               Password updated!
             </h2>
             <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:24px">
               Your OffScape password has been changed. You can now sign in with your new password.
             </p>
-            <a href="#" data-nav="/signin" class="auth-submit"
+            <a href="#" data-page="signin" class="auth-submit"
                style="display:inline-block;text-decoration:none;width:auto;padding:12px 32px">
               Sign In →
             </a>

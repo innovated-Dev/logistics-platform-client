@@ -54,8 +54,8 @@ export const VerifyPendingView = {
             <span id="vpResendTxt">Resend verification email</span>
           </button>
 
-          <!-- Fixed: data-nav navigates via Router correctly -->
-          <a href="#" data-nav="/signin" class="vp-back">
+          <!-- Fixed: data-page navigates via Router correctly -->
+          <a href="#" data-page="signin" class="vp-back">
             <i class="fa-solid fa-arrow-left"></i>
             Back to sign in
           </a>

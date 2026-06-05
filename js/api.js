@@ -4,7 +4,7 @@
 // 2. Email-based login (not phone)
 // 3. Orders.confirm(id, otp) with OTP param
 // 4. Orders.arrivedAtDelivery method added
-// 5. Riders.uploadKycDoc FormData uploader added
+// 5. pickmans.uploadKycDoc FormData uploader added
 // 6. Wallet.getBalance alias + settleCodDebit + getCodDebit
 // 7. Zones.getAll alias
 
@@ -39,12 +39,12 @@ export const AuthAPI = {
   // Signup by role
   signupCustomer: (body) => api('POST', '/auth/customer/signup', body),
   signupMerchant: (body) => api('POST', '/auth/merchant/signup', body),
-  signupRider:    (body) => api('POST', '/auth/rider/signup',    body),
+  signupPickman:    (body) => api('POST', '/auth/pickman/signup',    body),
 
   // Login by role — sends { email, password }
   loginCustomer: (email, password) => api('POST', '/auth/customer/login', { email, password }),
   loginMerchant: (email, password) => api('POST', '/auth/merchant/login', { email, password }),
-  loginRider:    (email, password) => api('POST', '/auth/rider/login',    { email, password }),
+  loginPickman:    (email, password) => api('POST', '/auth/pickman/login',    { email, password }),
 
   // Common auth flows
   logout:             ()           => api('POST',  '/auth/logout'),
@@ -54,7 +54,7 @@ export const AuthAPI = {
   resetPassword:      (password, passwordConfirm) =>
                                       api('POST',  '/auth/reset-password', { password, passwordConfirm }),
   verifyEmail:        (token)      => api('GET',   `/auth/verify-email?token=${token}`),
-  resendVerification: (email)           => api('POST',  '/auth/resend-verification'),
+  resendVerification: (email) => api('POST', '/auth/resend-verification', { email }),
   getMe:              ()           => api('GET',   '/auth/me'),
   refresh:            ()           => api('POST',  '/auth/refresh'),
   changePassword:     (currentPassword, newPassword) =>
@@ -79,7 +79,7 @@ export const Orders = {
 // ── WALLET — FIX 6 ──
 export const Wallet = {
   get:           ()             => api('GET',  '/wallet'),
-  // FIX 6a: alias — rider dashboard calls Wallet.getBalance()
+  // FIX 6a: alias — pickman dashboard calls Wallet.getBalance()
   getBalance:    ()             => api('GET',  '/wallet'),
   topup:         (amount)       => api('POST', '/wallet/topup', { amount }),
   verifyTopup:   (ref)          => api('GET',  `/wallet/verify?ref=${ref}`),
@@ -93,15 +93,22 @@ export const Wallet = {
   settleCodDebit:()             => api('POST', '/wallet/settle-cod'),
 };
 
-// ── RIDERS — FIX 5 ──
-export const Riders = {
-  // FIX 5: uploadKycDoc didn't exist — KycPendingView calls this
-  uploadKycDoc: (documentType, file) => {
+// ── pickmanS — FIX 5 ──
+export const Pickmen = {
+
+    getKycRequirements: async () => {
+      const res = await api('GET', '/kyc/requirements');
+      // Backend returns 'documents', frontend expects 'docs'
+      return { docs: res.documents || res.docs, ...res };
+    },
+    submitKyc:          () => api('POST', '/kyc/submit'),
+    getKycStatus:       () => api('GET', '/kyc/status'),
+    uploadKycDoc: (docKey, file) => {
     const token = localStorage.getItem('os_token');
     const fd = new FormData();
-    fd.append('file', file);
-    fd.append('documentType', documentType);
-    return fetch(`${BASE_URL}/api/riders/kyc/upload`, {
+    fd.append('document', file);
+    fd.append('docKey', docKey);
+    return fetch(`${BASE_URL}/api/kyc/upload`, {
       method:  'POST',
       headers: { Authorization: `Bearer ${token}` },
       body:    fd,
@@ -113,16 +120,15 @@ export const Riders = {
         return d;
       });
   },
-  getKycStatus:    ()          => api('GET',   '/riders/kyc/status'),
-  setStatus:       (status)    => api('PATCH', '/riders/status', { status }),
+  setStatus:       (status)    => api('PATCH', '/pickmen/status', { status }),
   updateLocation:  (lat, lng, orderId) =>
-                                  api('PATCH', '/riders/location', { lat, lng, orderId }),
-  getEarnings:     (period)    => api('GET',   `/riders/earnings?period=${period || 'today'}`),
+                                  api('PATCH', '/pickmen/location', { lat, lng, orderId }),
+  getEarnings:     (period)    => api('GET',   `/pickmen/earnings?period=${period || 'today'}`),
 };
 
-// ── ZONES — FIX 7 ──
+// ── ZONES  ──
 export const Zones = {
-  // FIX 7: rider dashboard calls Zones.getAll(city) — alias for getByCity
+  // FIX 7: pickman dashboard calls Zones.getAll(city) — alias for getByCity
   getAll:       (city = 'ibadan') =>
                   api('GET', `/zones?city=${encodeURIComponent(city.toLowerCase())}`),
   getByCity:    (city = 'ibadan') =>
@@ -142,9 +148,11 @@ export const Admin = {
   getDisputes:       ()           => api('GET',   '/admin/disputes'),
   resolveDispute:    (orderId, resolution) =>
                                      api('PATCH', `/admin/disputes/${orderId}/resolve`, { resolution }),
-  getKycQueue:       ()           => api('GET',   '/admin/kyc-queue'),
-  approveKYC:        (id, body)   => api('PATCH', `/admin/riders/${id}/kyc-approve`, body || {}),
-  rejectKYC:         (id, reason) => api('PATCH', `/admin/riders/${id}/kyc-reject`, { reason }),
+  getKycQueue:     ()              => api('GET',  '/admin/kyc/pending'),
+  getKycApp:       (id)            => api('GET',  `/admin/kyc/${id}`),
+  getKycDocument:  (id, docKey)    => api('GET',  `/admin/kyc/${id}/document/${docKey}`),
+  approveKYC:      (id)            => api('POST', `/admin/kyc/${id}/approve`),
+  rejectKYC:       (id, reason)    => api('POST', `/admin/kyc/${id}/reject`, { reason }),
   getCompensationPool: ()         => api('GET',   '/admin/compensation-pool'),
   topupPool:         (amount)     => api('POST',  '/admin/compensation-pool/topup', { amount }),
   getConfig:         ()           => api('GET',   '/admin/config'),

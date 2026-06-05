@@ -24,7 +24,7 @@ export const ForgotPasswordView = {
           <div id="fpStage1">
             <div class="auth-form-header">
               <h2>Forgot password? 🔑</h2>
-              <p>Remember it? <a href="#" data-nav="/signin">Sign in instead</a></p>
+              <p>Remember it? <a href="#" data-page="signin">Sign in instead</a></p>
             </div>
             <div class="auth-error" id="fpError"></div>
             <form id="fpForm" onsubmit="handleForgotSubmit(event)">
@@ -39,14 +39,14 @@ export const ForgotPasswordView = {
               </button>
             </form>
             <div class="auth-switch-link" style="margin-top:20px">
-              <a href="#" data-nav="/signin">← Back to Sign In</a>
+              <a href="#" data-page="signin">← Back to Sign In</a>
             </div>
           </div>
 
           <!-- Stage 2: Success screen -->
           <div id="fpStage2" style="display:none;text-align:center;padding:20px 0">
             <div style="font-size:56px;margin-bottom:20px">📬</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px">
+            <h2 style="font-family:'Switzer',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px">
               Check your inbox
             </h2>
             <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:24px">
@@ -61,7 +61,7 @@ export const ForgotPasswordView = {
               Resend Email
             </button>
             <div style="margin-top:16px">
-              <a href="#" data-nav="/signin" style="font-size:13px;color:var(--red);font-weight:700">
+              <a href="#" data-page="signin" style="font-size:13px;color:var(--red);font-weight:700">
                 ← Back to Sign In
               </a>
             </div>

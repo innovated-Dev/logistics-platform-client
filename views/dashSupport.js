@@ -115,7 +115,7 @@ function buildSupportHTML(u) {
 
       <!-- TICKETS -->
       <div id="sp-tickets" class="dash-panel" style="padding:24px">
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Support Tickets 🎫</div>
+        <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Support Tickets 🎫</div>
         <div style="font-size:13px;color:var(--text2);margin-bottom:20px">All open, in-progress and resolved support cases</div>
         <div class="stats-grid" style="margin-bottom:20px">
           <div class="stat-card" style="border-left:4px solid var(--red)"><div class="sv" style="color:var(--red)">14</div><div class="sl">Open</div><div class="ss">Needs attention</div></div>
@@ -185,7 +185,7 @@ function buildSupportHTML(u) {
 
       <!-- LIVE MONITOR -->
       <div id="sp-monitor" class="dash-panel" style="padding:24px">
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Live Platform Monitor 📡</div>
+        <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Live Platform Monitor 📡</div>
         <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Real-time activity view across Lagos & Ibadan</div>
         <div class="stats-grid" style="margin-bottom:20px">
           <div class="stat-card" style="border-left:4px solid var(--success)"><div class="sv" style="color:var(--success)" id="liveOrders">1,247</div><div class="sl">Active Orders</div><div class="ss"><span class="pulse-dot" style="color:var(--success)"></span> Live</div></div>
@@ -249,7 +249,7 @@ function buildSupportHTML(u) {
 
       <!-- USER LOOKUP -->
       <div id="sp-lookup" class="dash-panel" style="padding:24px">
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">User Lookup 🔍</div>
+        <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">User Lookup 🔍</div>
         <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Search any user, order, or rider by name, phone, email, or order ID</div>
         <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
           <input class="form-input" id="lookupInput" placeholder="Search by name, phone, email, or order ID..." style="flex:1;min-width:240px">
@@ -286,7 +286,7 @@ function buildSupportHTML(u) {
 
       <!-- KNOWLEDGE BASE -->
       <div id="sp-kb" class="dash-panel" style="padding:24px">
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Knowledge Base 📚</div>
+        <div style="font-family:'Switzer',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Knowledge Base 📚</div>
         <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Support scripts, FAQs and escalation procedures — also fed to the AI assistant</div>
         <div class="g2">
           <div>

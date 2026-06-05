@@ -28,13 +28,13 @@ export const VerifyEmailView = {
           <!-- Success -->
           <div id="veSuccess" style="display:none;text-align:center;max-width:340px">
             <div style="width:72px;height:72px;background:rgba(16,185,129,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px">✅</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px">
+            <h2 style="font-family:'Switzer',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px">
               Email verified!
             </h2>
             <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:28px">
               Your email address has been confirmed. Your OffScape account is now fully active.
             </p>
-            <a href="#" data-nav="/signin" class="auth-submit"
+            <a href="#" data-page="signin" class="auth-submit"
                style="display:inline-block;text-decoration:none;width:auto;padding:13px 36px">
               Sign In to Your Account →
             </a>
@@ -43,7 +43,7 @@ export const VerifyEmailView = {
           <!-- Error -->
           <div id="veError" style="display:none;text-align:center;max-width:340px">
             <div style="width:72px;height:72px;background:rgba(239,68,68,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px">⛔</div>
-            <h2 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;color:var(--red)">
+            <h2 style="font-family:'Switzer',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;color:var(--red)">
               Verification failed
             </h2>
             <p id="veErrorMsg" style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:24px">
@@ -53,7 +53,7 @@ export const VerifyEmailView = {
               <div class="auth-spinner" id="veResendSpinner"></div>
               <span id="veResendText">Resend Verification Email</span>
             </button>
-            <div><a href="#" data-nav="/signin" style="font-size:13px;color:var(--text2)">← Back to Sign In</a></div>
+            <div><a href="#" data-page="signin" style="font-size:13px;color:var(--text2)">← Back to Sign In</a></div>
           </div>
 
         </div>
@@ -87,18 +87,23 @@ export const VerifyEmailView = {
         //   }, 500);
         // });
 
+        console.log('🔍 OS.token after setSession:', OS.token);
+
         show('veSuccess');
 
         //Auto redirect after 2 seconds 
         setTimeout(()=> {
-          if(user.role === 'rider'){
+
+          if(user.role === 'pickman' && user.kycStatus === 'pending_kyc') {
             Router.go('/kyc-pending');
           } else {
+            console.log('🔍 Calling OS.enterDashboard with role:', user.role);
             OS.enterDashboard(user.role);
           }
         }, 2000);
 
       } catch(err) {
+        console.error('🔍 Verify error:', err);
         document.getElementById('veErrorMsg').textContent =
           err.message || 'This verification link is invalid or has expired.';
         show('veError');

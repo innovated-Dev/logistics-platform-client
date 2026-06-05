@@ -3,11 +3,11 @@
 //
 //  Customer  → [1] Personal  [2] Password
 //  Merchant  → [1] Personal  [2] Business   [3] Password
-//  Rider     → [1] Personal  [2] Zone       [3] Vehicle    [4] Guarantor  [5] Password
+//  Pickman     → [1] Personal  [2] Zone       [3] Vehicle    [4] Guarantor  [5] Password
 //
 // Zone loading:
 //  - Triggered when city is selected in step 1
-//  - Prefetched in background so step 2 (rider) loads instantly
+//  - Prefetched in background so step 2 (Pickman) loads instantly
 //  - Sends zone._id (ObjectId) as operatingZoneId — NOT slug
 //  - Uses GET /api/zones?city=ibadan via Zones.getAll()
 
@@ -25,7 +25,7 @@ const ROLE_STEPS = {
     { id: 'step-business',   label: 'Business'   },
     { id: 'step-password',   label: 'Password'   },
   ],
-  rider: [
+  Pickman: [
     { id: 'step-personal',   label: 'Your Info'  },
     { id: 'step-zone',       label: 'Zone'       },
     { id: 'step-vehicle',    label: 'Vehicle'    },
@@ -34,11 +34,34 @@ const ROLE_STEPS = {
   ],
 };
 
+// Fields shown per vehicle type on step-vehicle
+// Only these fields get rendered — nothing else
+const VEHICLE_FIELDS = {
+  motorcycle: [
+    { id: 'suVehicleModel', label: 'Vehicle model',  type: 'text', placeholder: 'Honda CB125',   hint: null },
+    { id: 'suPlate',        label: 'Plate number',   type: 'text', placeholder: 'ABC-123-DE',    hint: null,                         upper: true },
+    { id: 'suNin',          label: 'NIN',            type: 'text', placeholder: '12345678901',   hint: 'Must be exactly 11 digits',  maxlen: 11, numonly: true },
+  ],
+  bicycle: [
+    { id: 'suNin',          label: 'NIN',            type: 'text', placeholder: '12345678901',   hint: 'Must be exactly 11 digits',  maxlen: 11, numonly: true },
+  ],
+  car: [
+    { id: 'suVehicleModel', label: 'Vehicle model',  type: 'text', placeholder: 'Toyota Camry',  hint: null },
+    { id: 'suPlate',        label: 'Plate number',   type: 'text', placeholder: 'ABC-123-DE',    hint: null,                         upper: true },
+    { id: 'suNin',          label: 'NIN',            type: 'text', placeholder: '12345678901',   hint: 'Must be exactly 11 digits',  maxlen: 11, numonly: true },
+  ],
+  van: [
+    { id: 'suVehicleModel', label: 'Vehicle model',  type: 'text', placeholder: 'Toyota HiAce', hint: null },
+    { id: 'suPlate',        label: 'Plate number',   type: 'text', placeholder: 'ABC-123-DE',    hint: null,                         upper: true },
+    { id: 'suNin',          label: 'NIN',            type: 'text', placeholder: '12345678901',   hint: 'Must be exactly 11 digits',  maxlen: 11, numonly: true },
+  ],
+};
+
 export const SignUpView = {
   render(container) {
     let selectedRole  = 'customer';
     let currentStep   = 0;          // index into ROLE_STEPS[selectedRole]
-    let prefetchedZones = [];        // cached so step 2 (rider zone) is instant
+    let prefetchedZones = [];        // cached so step 2 (Pickman zone) is instant
 
     // ─────────────────────────────────────────────────────────────────────────
     // HTML
@@ -50,13 +73,13 @@ export const SignUpView = {
         <div class="auth-left">
           <div class="auth-brand-logo">Off<span>Scape</span></div>
           <h1>Start sending <em>smarter.</em></h1>
-          <p>Join thousands of customers, merchants, and riders on Nigeria's fastest-growing logistics platform.</p>
+          <p>Join thousands of customers, merchants, and Pickmans on Nigeria's fastest-growing logistics platform.</p>
           <div class="auth-steps">
             ${[
               ['1', 'Create your account',      'Under 2 minutes'],
               ['2', 'Book your first delivery', 'Pickup, drop-off, and package'],
               ['3', 'Track until delivered',    'Live GPS on every order'],
-              ['4', 'Get paid or save money',   'Instant payouts for riders'],
+              ['4', 'Get paid or save money',   'Instant payouts for Pickmans'],
             ].map(([n, title, sub]) => `
             <div class="auth-step">
               <div class="step-num">${n}</div>
@@ -69,7 +92,7 @@ export const SignUpView = {
         <div class="auth-right">
           <div class="auth-form-header">
             <h2 id="suFormTitle">Create your account</h2>
-            <p>Already have one? <a href="#" data-nav="/signin">Sign in instead</a></p>
+            <p>Already have one? <a href="#" data-page="signin">Sign in instead</a></p>
           </div>
 
           <!-- ROLE SELECTOR — always visible on step 0 -->
@@ -79,7 +102,7 @@ export const SignUpView = {
               ${[
                 ['customer', '<i class="fa-regular fa-user"></i>',       'Customer', 'Send packages'],
                 ['merchant', '<i class="fa-solid fa-store"></i>',        'Merchant', 'Business owner'],
-                ['rider',    '<i class="fa-solid fa-motorcycle"></i>',   'Rider',    'Deliver &amp; earn'],
+                ['Pickman',    '<i class="fa-solid fa-motorcycle"></i>',   'Pickman',    'Deliver &amp; earn'],
               ].map(([r, icon, name, desc], i) => `
               <div class="role-card${i === 0 ? ' active' : ''}" onclick="suSelectRole(this,'${r}')">
                 <div class="role-card-icon">${icon}</div>
@@ -146,13 +169,13 @@ export const SignUpView = {
               <label>Business Type</label>
               <select class="form-input" id="suBusinessType">
                 <option value="">Select type...</option>
-                <option value="fashion">Fashion &amp; Clothing</option>
-                <option value="electronics">Electronics</option>
-                <option value="grocery">Grocery &amp; Food</option>
-                <option value="pharmacy">Pharmacy</option>
-                <option value="documents">Documents &amp; Printing</option>
-                <option value="furniture">Furniture &amp; Home</option>
-                <option value="other">Other</option>
+                <option value="Fashion & Clothing">Fashion &amp; Clothing</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Grocery & Food">Grocery &amp; Food</option>
+                <option value="Pharmacy">Pharmacy</option>
+                <option value="Documents & Printing">Documents &amp; Printing</option>
+                <option value="Furniture & Home">Furniture &amp; Home</option>
+                <option value="Other">Other</option>
               </select>
             </div>
             <div class="form-group">
@@ -166,7 +189,7 @@ export const SignUpView = {
             </div>
           </div>
 
-          <!-- ── STEP: Operating Zone (rider only) ── -->
+          <!-- ── STEP: Operating Zone (Pickman only) ── -->
           <div class="su-step" id="step-zone" style="display:none">
             <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Operating Zone</div>
             <p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px">
@@ -195,42 +218,26 @@ export const SignUpView = {
             </div>
           </div>
 
-          <!-- ── STEP: Vehicle Details (rider only) ── -->
-          <div class="su-step" id="step-vehicle" style="display:none">
-            <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px">Vehicle Information</div>
-            <div class="form-group">
-              <label>Vehicle Type</label>
-              <select class="form-input" id="suVehicleType">
-                <option value="">Select vehicle...</option>
-                <option value="motorcycle">Motorcycle (Okada)</option>
-                <option value="bicycle">Bicycle</option>
-                <option value="car">Car</option>
-                <option value="van">Van / Mini-truck</option>
-              </select>
-            </div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label>Vehicle Model</label>
-                <input class="form-input" type="text" id="suVehicleModel"
-                  placeholder="Honda CB125">
-              </div>
-              <div class="form-group">
-                <label>Plate Number</label>
-                <input class="form-input" type="text" id="suPlate"
-                  placeholder="ABC-123-DE"
-                  oninput="this.value = this.value.toUpperCase()">
-              </div>
-            </div>
-            <div class="form-group">
-              <label>NIN (National ID Number)</label>
-              <input class="form-input" type="text" id="suNin"
-                placeholder="12345678901" maxlength="11"
-                oninput="this.value = this.value.replace(/\D/g,'')">
-              <div style="font-size:11px;color:var(--text3);margin-top:4px">Must be exactly 11 digits</div>
-            </div>
+          <!-- ── STEP: Vehicle Details (Pickman only) ── -->
+        <div class="su-step" id="step-vehicle" style="display:none">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px">Vehicle Information</div>
+
+          <div class="form-group">
+            <label>Vehicle Type</label>
+            <select class="form-input" id="suVehicleType" onchange="suOnVehicleTypeChange(this.value)">
+              <option value="">Select vehicle...</option>
+              <option value="motorcycle">Motorcycle (Okada)</option>
+              <option value="bicycle">Bicycle</option>
+              <option value="car">Car</option>
+              <option value="van">Van / Mini-truck</option>
+            </select>
           </div>
 
-          <!-- ── STEP: Guarantor (rider only) ── -->
+          <!-- Dynamic fields render here based on vehicle type -->
+          <div id="suVehicleFields"></div>
+        </div>
+
+          <!-- ── STEP: Guarantor (Pickman only) ── -->
           <div class="su-step" id="step-guarantor" style="display:none">
             <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Guarantor Information</div>
             <p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px">
@@ -306,8 +313,8 @@ export const SignUpView = {
               <label for="suTerms"
                 style="font-size:12px;color:var(--text2);cursor:pointer;text-transform:none;letter-spacing:0;line-height:1.5">
                 I agree to OffScape's
-                <a href="#" data-nav="/terms" style="color:var(--red)">Terms of Service</a> and
-                <a href="#" data-nav="/privacy" style="color:var(--red)">Privacy Policy</a>.
+                <a href="#" data-page="terms" style="color:var(--red)">Terms of Service</a> and
+                <a href="#" data-page="privacy" style="color:var(--red)">Privacy Policy</a>.
                 I understand the platform charges a 5% fee on all deliveries.
               </label>
             </div>
@@ -338,7 +345,7 @@ export const SignUpView = {
           </div>
 
           <div class="auth-switch-link" style="margin-top:16px">
-            Already have an account? <a href="#" data-nav="/signin">Sign in</a>
+            Already have an account? <a href="#" data-page="signin">Sign in</a>
           </div>
         </div>
       </div>`;
@@ -384,7 +391,7 @@ export const SignUpView = {
       el.classList.add('active');
 
       // Update "Continue as X" button label
-      const labels = { customer: 'Customer', merchant: 'Merchant', rider: 'Rider' };
+      const labels = { customer: 'Customer', merchant: 'Merchant', Pickman: 'Pickman' };
       const lbl = document.getElementById('suRoleLabel');
       if (lbl) lbl.textContent = labels[role];
     };
@@ -392,10 +399,10 @@ export const SignUpView = {
     // ─────────────────────────────────────────────────────────────────────────
     // ZONE FETCHING
     // Triggered when city is selected in step-personal (step 1).
-    // Prefetches zones in background so rider step 2 is instant.
+    // Prefetches zones in background so Pickman step 2 is instant.
     // ─────────────────────────────────────────────────────────────────────────
     window.suOnCityChange = async function(city) {
-      if (!city || selectedRole !== 'rider') return;
+      if (!city || selectedRole !== 'Pickman') return;
       await suFetchZones(city);
     };
 
@@ -555,8 +562,8 @@ export const SignUpView = {
       currentStep = 1;
       renderStep();
 
-      // Prefetch zones if rider already has a city
-      if (selectedRole === 'rider') {
+      // Prefetch zones if Pickman already has a city
+      if (selectedRole === 'Pickman') {
         const city = val('suCity');
         if (city) suFetchZones(city);
       }
@@ -588,7 +595,7 @@ export const SignUpView = {
       } else {
         currentStep++;
 
-        // When advancing to zone step for riders, ensure zones are loaded
+        // When advancing to zone step for Pickmans, ensure zones are loaded
         if (steps[currentStep - 1]?.id === 'step-zone') {
           const city = val('suCity');
           if (city && prefetchedZones.length === 0) {
@@ -633,11 +640,22 @@ export const SignUpView = {
         }
 
         case 'step-vehicle': {
-          if (!val('suVehicleType'))  return 'Please select your vehicle type.';
-          if (!val('suVehicleModel')) return 'Please enter your vehicle model.';
-          if (!val('suPlate'))        return 'Please enter your plate number.';
-          const nin = val('suNin');
-          if (!nin || !/^\d{11}$/.test(nin)) return 'NIN must be exactly 11 digits.';
+          if (!val('suVehicleType')) return 'Please select your vehicle type.';
+
+          const vtype = val('suVehicleType');
+          const fields = VEHICLE_FIELDS[vtype] || [];
+
+          // Only validate fields that actually exist for this vehicle type
+          for (const field of fields) {
+            if (field.id === 'suVehicleModel' && !val(field.id))
+              return 'Please enter your vehicle model.';
+            if (field.id === 'suPlate' && !val(field.id))
+              return 'Please enter your plate number.';
+            if (field.id === 'suNin') {
+              const nin = val(field.id);
+              if (!nin || !/^\d{11}$/.test(nin)) return 'NIN must be exactly 11 digits.';
+            }
+          }
           return null;
         }
 
@@ -665,74 +683,173 @@ export const SignUpView = {
       }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // SUBMIT
-    // ─────────────────────────────────────────────────────────────────────────
-    async function submitSignup() {
-      setLoading(true);
-      const btnTxt = document.getElementById('suBtnText');
-      if (btnTxt) btnTxt.textContent = 'Creating account…';
+      // ==================== SIGN UP VIEW — Post-Signup Routing Fix ====================
+      //
+      // Replace the submitSignup() function in SignUpView with this version.
+      // Key changes:
+      //
+      //  1. Role casing fix:  'Pickman' (capital P) in ROLE_STEPS but 'pickman' (lower)
+      //     sent to backend — now consistent throughout
+      //
+      //  2. Post-signup routing:
+      //     - customer  → /verify-pending  (verify email first)
+      //     - merchant  → /verify-pending  (verify email first)
+      //     - pickman   → /kyc-pending     (bypasses email verify, lands on KYC view)
+      //       ↑ Because pickmans need KYC regardless, and their email can be verified later.
+      //       Adjust if your product requires email verify before KYC.
+      //
+      //  3. vehicleType stored in session/AuthState so KycPendingView.render()
+      //     can show the correct vehicle label in the hero banner immediately,
+      //     even before the /api/kyc/requirements response arrives.
+      //
+      // ── HOW TO APPLY: ────────────────────────────────────────────────────────────
+      //   In SignUpView.render(), replace the inner submitSignup() function
+      //   with the one below. Everything else in SignUpView stays the same.
+      // ─────────────────────────────────────────────────────────────────────────────
 
-      try {
-        const base = {
-          firstName: val('suFirst'),
-          lastName:  val('suLast'),
-          email:     val('suEmail'),
-          phone:     val('suPhone'),
-          city:      val('suCity'),
-          password:  document.getElementById('suPassword')?.value,
-        };
-
-        let result;
-
-        if (selectedRole === 'customer') {
-          result = await AuthAPI.signupCustomer(base);
-
-        } else if (selectedRole === 'merchant') {
-          result = await AuthAPI.signupMerchant({
-            ...base,
-            businessName:    val('suBusinessName'),
-            businessType:    val('suBusinessType'),
-            businessAddress: val('suBusinessAddress'),
-            cacNumber:       val('suCac') || undefined,
-          });
-
-        } else if (selectedRole === 'rider') {
-          result = await AuthAPI.signupRider({
-            ...base,
-            // ← ObjectId from zone dropdown — backend validates this
-            operatingZoneId:       document.getElementById('suOperatingZone')?.value,
-            vehicleType:           val('suVehicleType'),
-            vehicleModel:          val('suVehicleModel'),
-            plateNumber:           val('suPlate'),
-            nin:                   val('suNin'),
-            guarantorFullName:     val('suGuarantorName'),
-            guarantorPhone:        val('suGuarantorPhone'),
-            guarantorRelationship: val('suGuarantorRel'),
-            guarantorAddress:      val('suGuarantorAddress')
-          });
-        }
-
-        // Store email for the resend verification flow
-        sessionStorage.setItem('pendingVerifyEmail', base.email);
-
-        showToast(
-          result?.emailSent !== false
-            ? 'Account created! Check your email to verify.'
-            : 'Account created! Use the resend option to get your verification email.',
-          'success',
-          5000
-        );
-
-        Router.go('/verify-pending');
-
-      } catch (err) {
-        showError(err.message || 'Could not create account. Please try again.');
-        setLoading(false);
+      async function submitSignup() {
+        setLoading(true);
         const btnTxt = document.getElementById('suBtnText');
-        if (btnTxt) btnTxt.textContent = 'Create Account →';
+        if (btnTxt) btnTxt.textContent = 'Creating account…';
+
+        try {
+          const base = {
+            firstName: val('suFirst'),
+            lastName:  val('suLast'),
+            email:     val('suEmail'),
+            phone:     val('suPhone'),
+            city:      val('suCity'),
+            password:  document.getElementById('suPassword')?.value,
+          };
+
+          let result;
+
+          // ── Note: use lowercase 'pickman' when talking to the backend.
+          //    ROLE_STEPS uses 'Pickman' (capital P) as a display key internally —
+          //    normalise to lowercase before any API call or string comparison.
+          const role = selectedRole.toLowerCase();
+
+          if (role === 'customer') {
+            result = await AuthAPI.signupCustomer(base);
+
+          } else if (role === 'merchant') {
+            result = await AuthAPI.signupMerchant({
+              ...base,
+              businessName:    val('suBusinessName'),
+              businessType:    val('suBusinessType'),
+              businessAddress: val('suBusinessAddress'),
+              cacNumber:       val('suCac') || undefined,
+            });
+
+          }  else if (role === 'pickman') {
+            const vehicleType = val('suVehicleType');
+            const fields      = VEHICLE_FIELDS[vehicleType] || [];
+            const hasField    = (id) => fields.some(f => f.id === id);
+
+            result = await AuthAPI.signupPickman({
+              ...base,
+              operatingZoneId:       document.getElementById('suOperatingZone')?.value,
+              vehicleType,
+              // Only include these if the vehicle type actually has them
+              ...(hasField('suVehicleModel') && { vehicleModel: val('suVehicleModel') }),
+              ...(hasField('suPlate')        && { plateNumber:  val('suPlate') }),
+              nin:                   val('suNin'),   // NIN is always present
+              guarantorFullName:     val('suGuarantorName'),
+              guarantorPhone:        val('suGuarantorPhone'),
+              guarantorRelationship: val('suGuarantorRel'),
+              guarantorAddress:      val('suGuarantorAddress'),
+            });
+            
+            // ── Store vehicleType in session so KycPendingView hero banner
+            //    can show the correct label instantly, before the API responds.
+            sessionStorage.setItem('pendingVehicleType', vehicleType);
+
+            // ── If the backend returns a JWT immediately (before email verify),
+            //    store it so the KYC view can make authenticated requests.
+            const token = result?.accessToken || result?.token;
+            if (token) {
+              Auth.setSession(token, result.user);
+              // Auth.setSession already syncs to OS.currentUser, no need for AuthState
+            }
+          }
+
+          // ── Store email for the resend verification flow (all roles)
+          sessionStorage.setItem('pendingVerifyEmail', base.email);
+
+          // ── ROUTING DECISION
+          // pickman → KYC upload screen (they can verify email after KYC is approved)
+          // everyone else → email verification pending screen
+          if (role === 'pickman' && result?.status === 'pending_kyc') {
+            showToast('Account created! Upload your documents to get started.', 'success', 5000);
+            Router.go('/kyc-pending');
+          } else {
+            showToast(
+              result?.emailSent !== false
+                ? 'Account created! Check your email to verify.'
+                : 'Account created! Use the resend option to get your verification email.',
+              'success',
+              5000
+            );
+            // After successful signup response
+            const token = result?.accessToken || result?.token;
+            if (token) {
+              Auth.setSession(token, result.user);
+            }
+            Router.go('/verify-pending');
+          }
+
+        } catch (err) {
+          showError(err.message || 'Could not create account. Please try again.');
+          setLoading(false);
+          const btnTxt = document.getElementById('suBtnText');
+          if (btnTxt) btnTxt.textContent = 'Create Account →';
+        }
       }
-    }
+
+
+      // ==================== ROUTER — Add the /kyc-pending route ====================
+//
+// Add this case to your Router (wherever you handle path → view mapping).
+// The KYC view is only reachable if the user is authenticated and has
+// status === 'pending_kyc'. Your router guard handles this.
+//
+// Example router guard pseudocode:
+//
+//   Router.addGuard('/kyc-pending', (user) => {
+//     if (!user)                     return '/signin';
+//     if (user.role !== 'pickman')   return '/dashboard';
+//     if (user.status === 'active')  return '/dashboard';
+//     return null; // allow through
+//   });
+//
+//   Router.register('/kyc-pending', () => KycPendingView.render(appContainer));
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+
+// ==================== OS.currentUser — vehicleType hydration ====================
+//
+// The KycPendingView uses OS.currentUser.vehicleType for the hero banner label.
+// Make sure your AuthState / OS.currentUser population includes vehicleType.
+//
+// If you're hydrating from a JWT payload, the pickman signup response should
+// include vehicleType in the user object. Add it to your JWT sign payload:
+//
+//   // backend: auth.controller.js → signupPickman handler
+//   const token = jwt.sign(
+//     {
+//       _id:         newRider._id,
+//       role:        'pickman',
+//       status:      'pending_kyc',
+//       vehicleType: newRider.vehicleType,   // ← add this
+//       firstName:   newRider.firstName,
+//       initials:    initials(newRider),
+//     },
+//     process.env.JWT_SECRET,
+//     { expiresIn: '30d' }
+//   );
+//
+// ─────────────────────────────────────────────────────────────────────────────
 
     // ─────────────────────────────────────────────────────────────────────────
     // PASSWORD STRENGTH
@@ -775,6 +892,39 @@ export const SignUpView = {
       btn.innerHTML = inp.type === 'password'
         ? '<i class="fa-regular fa-eye"></i>'
         : '<i class="fa-regular fa-eye-slash"></i>';
+    };
+
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Vehicle fields dynamic rendering
+    // ─────────────────────────────────────────────────────────────────────────
+      window.suOnVehicleTypeChange = function(vehicleType) {
+      const container = document.getElementById('suVehicleFields');
+      if (!container) return;
+
+      const fields = VEHICLE_FIELDS[vehicleType] || [];
+      container.innerHTML = '';
+
+      fields.forEach(field => {
+        const group = document.createElement('div');
+        group.className = 'form-group';
+        group.innerHTML = `
+          <label>${field.label}</label>
+          <input class="form-input"
+                type="${field.type}"
+                id="${field.id}"
+                placeholder="${field.placeholder}"
+                ${field.maxlen ? `maxlength="${field.maxlen}"` : ''}>
+          ${field.hint
+            ? `<div style="font-size:11px;color:var(--text3);margin-top:4px">${field.hint}</div>`
+            : ''}
+        `;
+        container.appendChild(group);
+
+        const input = document.getElementById(field.id);
+        if (field.upper)   input.addEventListener('input', () => { input.value = input.value.toUpperCase(); });
+        if (field.numonly) input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, ''); });
+      });
     };
 
     // ─────────────────────────────────────────────────────────────────────────
