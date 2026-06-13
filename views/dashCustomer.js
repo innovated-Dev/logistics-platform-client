@@ -887,6 +887,9 @@ export const CustomerDashView = {
         assignmentMode: 'auto',
       };
 
+      // Log payload for debugging
+      console.log('[Order Payload]', JSON.stringify(payload, null, 2));
+
       // ── PAYSTACK INLINE FLOW ────────────────────────────────────────────────
       if (payMethod === 'paystack') {
         if (typeof PaystackPop === 'undefined') {
@@ -960,8 +963,21 @@ export const CustomerDashView = {
                 pollOrderStatus(order._id);
                 showToast('✓ Payment successful! Order placed.', 'success');
               } catch (e) {
+                // Log full error details for debugging
                 console.error('[Order Creation Error]', e);
-                showToast('Payment received but order creation failed. Contact support with reference: ' + transaction.reference, 'error');
+                console.error('[Error Details]', {
+                  message: e.message,
+                  errors: e.errors,
+                  status: e.status,
+                  data: e.data,
+                });
+                
+                // Show specific validation errors to user
+                const errorDetails = e.errors 
+                  ? e.errors.map(err => `• ${err.field}: ${err.message}`).join('\n')
+                  : e.message || 'Order creation failed';
+                
+                showToast(`Order failed:\n${errorDetails}\n\nRef: ${transaction.reference}`, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Pay & Place Order →';
               }
